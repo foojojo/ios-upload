@@ -1,0 +1,28 @@
+workflows:
+  upload-ipa:
+    name: Upload iOS ipa to App Store Connect
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      groups:
+        - appstore
+      vars:
+        IPA_URL: "https://github.com/foojojo/ios-upload/releases/download/ios-1.4.34/__UNI__E42CB30_1118235824.ipa"
+    scripts:
+      - name: Download ipa
+        script: |
+          curl -L -o app.ipa "$IPA_URL"
+          ls -lh app.ipa
+      - name: Write App Store Connect key
+        script: |
+          mkdir -p ~/private_keys
+          echo "$APP_STORE_CONNECT_PRIVATE_KEY" > ~/private_keys/AuthKey_${APP_STORE_CONNECT_KEY_IDENTIFIER}.p8
+          chmod 600 ~/private_keys/AuthKey_${APP_STORE_CONNECT_KEY_IDENTIFIER}.p8
+      - name: Upload to App Store Connect
+        script: |
+          xcrun altool --upload-app -f app.ipa -t ios \
+            --apiKey "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+            --output-format json
+    artifacts:
+      - app.ipa

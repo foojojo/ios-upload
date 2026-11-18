@@ -23,6 +23,7 @@ workflows:
           xcrun altool --upload-app -f app.ipa -t ios \
             --apiKey "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+            --asc-provider "5F46MAH574" \
             --output-format json
     artifacts:
       - app.ipa

@@ -9,7 +9,7 @@ on:
 
 jobs:
   upload:
-    runs-on: macos-14
+    runs-on: macos-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
